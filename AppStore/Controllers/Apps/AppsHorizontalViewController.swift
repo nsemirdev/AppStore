@@ -20,8 +20,7 @@ final class AppsHorizontalViewController: UICollectionViewController, UICollecti
     }
     
     private func setupCollectionView() {
-        collectionView.backgroundColor = .blue
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: AppsHorizontalViewController.cellId)
+        collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: AppsHorizontalViewController.cellId)
         
         if let layout = collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -42,7 +41,6 @@ final class AppsHorizontalViewController: UICollectionViewController, UICollecti
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AppsHorizontalViewController.cellId, for: indexPath)
-        cell.backgroundColor = .red
         return cell
     }
 }

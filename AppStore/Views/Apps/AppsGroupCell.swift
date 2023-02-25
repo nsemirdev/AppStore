@@ -21,7 +21,6 @@ final class AppsGroupCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .purple
         setupSubviews()
         setupChildVC()
     }
@@ -30,13 +29,11 @@ final class AppsGroupCell: UICollectionViewCell {
         addSubview(horizontalController.view)
         horizontalController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            horizontalController.view.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            horizontalController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             horizontalController.view.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             horizontalController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             horizontalController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
-        
-        horizontalController.view.backgroundColor = .red
     }
     
     private func setupSubviews() {
@@ -44,7 +41,7 @@ final class AppsGroupCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
