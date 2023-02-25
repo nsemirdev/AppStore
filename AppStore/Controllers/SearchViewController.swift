@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import SDWebImage
 
 final class SearchViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     private static let cellID = "SearchViewController"
-
+    private var results = [ApiResult]()
+    
     convenience init() {
         self.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
@@ -17,6 +19,22 @@ final class SearchViewController: UICollectionViewController, UICollectionViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        fetchApps()
+    }
+    
+    private func fetchApps() {
+        NetworkService.shared.fetchApps { result in
+            switch result {
+            case .success(let results):
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.results = results
+                    self.collectionView.reloadData()
+                }
+            case .failure(let failure):
+                print(failure)
+            }
+        }
     }
     
     private func setupCollectionView() {
@@ -29,12 +47,12 @@ final class SearchViewController: UICollectionViewController, UICollectionViewDe
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        10
+        results.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchViewController.cellID, for: indexPath)
-//        cell.backgroundColor = .red
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchViewController.cellID, for: indexPath) as! SearchResultCell
+        cell.appResult = results[indexPath.item]
         return cell
     }
 }
