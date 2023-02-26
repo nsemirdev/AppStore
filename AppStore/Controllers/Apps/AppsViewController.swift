@@ -14,14 +14,32 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
     var socialApps = [SocialApp]()
     var groups = [Feed]()
     
+    private let activityIndicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.startAnimating()
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     convenience init() {
         self.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupActivityIndicator()
         setupCollectionView()
         fetchJSONData()
+    }
+    
+    private func setupActivityIndicator() {
+        view.addSubview(activityIndicatorView)
+        
+        NSLayoutConstraint.activate([
+            activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func fetchJSONData() {
@@ -72,6 +90,7 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
                 self.groups.append(group2)
             }
             self.socialApps = socialApps ?? []
+            self.activityIndicatorView.stopAnimating()
             self.collectionView.reloadData()
         }
     }
