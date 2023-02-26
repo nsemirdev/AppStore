@@ -9,7 +9,7 @@ import UIKit
 
 final class AppsGroupCell: UICollectionViewCell {
     
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "App Section"
@@ -17,7 +17,7 @@ final class AppsGroupCell: UICollectionViewCell {
         return label
     }()
     
-    private let horizontalController = AppsHorizontalViewController()
+    let horizontalController = AppsHorizontalViewController()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -9,14 +9,15 @@ import UIKit
 
 final class AppsHeaderCell: UICollectionViewCell {
     
-    private let companyLabel: UILabel = {
+    let companyLabel: UILabel = {
         let label = UILabel()
         label.text = "Company"
         label.font = .boldSystemFont(ofSize: 12)
+        label.textColor = .blue
         return label
     }()
     
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Title"
         label.font = .systemFont(ofSize: 24)
@@ -24,11 +25,11 @@ final class AppsHeaderCell: UICollectionViewCell {
         return label
     }()
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .red
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     

@@ -11,6 +11,9 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
     private static let cellId = "AppsViewController"
     private static let headerId = "Header"
     
+    var socialApps = [SocialApp]()
+    var groups = [Feed]()
+    
     convenience init() {
         self.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
@@ -18,6 +21,59 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        fetchJSONData()
+    }
+    
+    private func fetchJSONData() {
+        var group1: Feed?
+        var group2: Feed?
+        var socialApps: [SocialApp]?
+        
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        
+        NetworkService.shared.fetchTopFree { result in
+            dispatchGroup.leave()
+            switch result {
+            case .success(let feed):
+                group1 = feed
+            case .failure(let failure):
+                print(failure)
+            }
+        }
+        
+        dispatchGroup.enter()
+        NetworkService.shared.fetchPaidApps { result in
+            dispatchGroup.leave()
+            switch result {
+            case .success(let feed):
+                group2 = feed
+            case .failure(let failure):
+                print(failure)
+            }
+        }
+        
+        dispatchGroup.enter()
+        NetworkService.shared.fetchSocialApps { result in
+            dispatchGroup.leave()
+            switch result {
+            case .success(let apps):
+                socialApps = apps
+            case .failure(let failure):
+                print(failure)
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            if let group1 {
+                self.groups.append(group1)
+            }
+            if let group2 {
+                self.groups.append(group2)
+            }
+            self.socialApps = socialApps ?? []
+            self.collectionView.reloadData()
+        }
     }
     
     private func setupCollectionView() {
@@ -26,8 +82,9 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AppsViewController.headerId, for: indexPath)
-        
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AppsViewController.headerId, for: indexPath) as! AppsHeader
+        header.appHeaderHorizontalController.socialApps = socialApps
+        header.appHeaderHorizontalController.collectionView.reloadData()
         return header
     }
     
@@ -40,11 +97,15 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        groups.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AppsViewController.cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AppsViewController.cellId, for: indexPath) as! AppsGroupCell
+        let feed = groups[indexPath.item]
+        cell.titleLabel.text = feed.title
+        cell.horizontalController.feed = feed
+        cell.horizontalController.collectionView.reloadData()
         return cell
     }
     
