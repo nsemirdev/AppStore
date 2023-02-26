@@ -7,13 +7,9 @@
 
 import UIKit
 
-final class AppsHorizontalViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+final class AppsHorizontalViewController: HorizontalSnappingController, UICollectionViewDelegateFlowLayout {
     private static let cellId = "AppsHorizontalViewController"
     var feed: Feed?
-    
-    convenience init() {
-        self.init(collectionViewLayout: UICollectionViewFlowLayout())
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +18,6 @@ final class AppsHorizontalViewController: UICollectionViewController, UICollecti
     
     private func setupCollectionView() {
         collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: AppsHorizontalViewController.cellId)
-        
-        if let layout = collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
