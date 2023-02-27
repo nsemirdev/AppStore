@@ -11,6 +11,8 @@ final class AppsHorizontalViewController: HorizontalSnappingController, UICollec
     private static let cellId = "AppsHorizontalViewController"
     var feed: Feed?
     
+    var didSelectHandler: ((FeedResult) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
@@ -38,5 +40,10 @@ final class AppsHorizontalViewController: HorizontalSnappingController, UICollec
         cell.imageView.sd_setImage(with: URL(string: feed!.results[indexPath.item].artworkUrl100))
         cell.companyLabel.text = feed?.results[indexPath.item].artistName
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let app = feed?.results[indexPath.item]
+        didSelectHandler?(app!)
     }
 }

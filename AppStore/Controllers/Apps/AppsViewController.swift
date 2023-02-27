@@ -125,10 +125,21 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
         cell.titleLabel.text = feed.title
         cell.horizontalController.feed = feed
         cell.horizontalController.collectionView.reloadData()
+        cell.horizontalController.didSelectHandler =  { [weak self] app in
+            guard let self else { return }
+            let redVC = UIViewController()
+            redVC.view.backgroundColor = .red
+            redVC.navigationItem.title = app.name
+            
+            self.navigationController?.pushViewController(redVC, animated: true)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         .init(top: 16, left: 0, bottom: 0, right: 0)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     }
 }
