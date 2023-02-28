@@ -9,6 +9,7 @@ import UIKit
 
 final class AppDetailViewController: HorizontalSnappingController, UICollectionViewDelegateFlowLayout {
     private let cellId = "AppDetailViewController"
+    private let detailCellId = "DetailCellID"
     var app: ApiResult?
     
     var appId: String? {
@@ -37,6 +38,7 @@ final class AppDetailViewController: HorizontalSnappingController, UICollectionV
     
     private func setupCollectionView() {
         collectionView.register(AppDetailCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(PreviewCell.self, forCellWithReuseIdentifier: detailCellId)
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
         }
@@ -44,6 +46,11 @@ final class AppDetailViewController: HorizontalSnappingController, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+        
+        if indexPath.item == 1 {
+            return .init(width: view.frame.size.width, height: 500)
+        }
+        
         let dummyCell = AppDetailCell(frame: .init(x: 0, y: 0, width: view.frame.size.width, height: 1000))
         dummyCell.releaseNotesLabel.text = app?.releaseNotes
         dummyCell.nameLabel.text = app?.trackName
@@ -56,16 +63,22 @@ final class AppDetailViewController: HorizontalSnappingController, UICollectionV
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        1
+        2
     }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppDetailCell
-        cell.nameLabel.text = app?.trackName
-        cell.releaseNotesLabel.text = app?.releaseNotes
-        cell.imageView.sd_setImage(with: URL(string: app?.artworkUrl100 ?? ""))
-        cell.priceButton.setTitle(app?.formattedPrice, for: .normal)
-        return cell
+        
+        if indexPath.item == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppDetailCell
+            cell.nameLabel.text = app?.trackName
+            cell.releaseNotesLabel.text = app?.releaseNotes
+            cell.imageView.sd_setImage(with: URL(string: app?.artworkUrl100 ?? ""))
+            cell.priceButton.setTitle(app?.formattedPrice, for: .normal)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellId, for: indexPath) as! PreviewCell
+            cell.horizontalController.app = self.app
+            return cell
+        }
     }
-    
-    
 }
