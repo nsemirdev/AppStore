@@ -127,11 +127,11 @@ final class AppsViewController: UICollectionViewController, UICollectionViewDele
         cell.horizontalController.collectionView.reloadData()
         cell.horizontalController.didSelectHandler =  { [weak self] app in
             guard let self else { return }
-            let redVC = UIViewController()
-            redVC.view.backgroundColor = .red
-            redVC.navigationItem.title = app.name
-            
-            self.navigationController?.pushViewController(redVC, animated: true)
+            let detailVC = AppDetailViewController()
+            detailVC.view.backgroundColor = .white
+            detailVC.navigationItem.title = app.name
+            detailVC.appId = app.id
+            self.navigationController?.pushViewController(detailVC, animated: true)
         }
         return cell
     }

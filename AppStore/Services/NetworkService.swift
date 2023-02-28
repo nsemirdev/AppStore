@@ -105,4 +105,28 @@ final class NetworkService {
             }
         }.resume()
     }
+    
+    public func fetchByAppID(appId: String, completion: @escaping (Result<SearchResult, Error>) -> Void) {
+        let urlString = "https://itunes.apple.com/lookup?id=\(appId)"
+        let req = URLRequest(url: URL(string: urlString)!)
+        
+        URLSession.shared.dataTask(with: req) { data, response, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data else {
+                completion(.failure(error!))
+                return
+            }
+            
+            do {
+                let decodedObj = try JSONDecoder().decode(SearchResult.self, from: data)
+                completion(.success(decodedObj))
+            } catch let decodeErr {
+                completion(.failure(decodeErr))
+            }
+        }.resume()
+    }
 }
